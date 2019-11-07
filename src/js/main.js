@@ -48,19 +48,24 @@ function runQuery(url, query) {
       return fetchedData
     })
     .then(fetchedData => {
-      cleanData(fetchedData)
+      cleanDataYear(fetchedData)
     })
 }
 
-
-function cleanData (fetchedData) {
+function cleanDataYear (fetchedData) {
   fetchedData.forEach((item, count) => {
+    // Transform all elements to uppercase
     item.date.value = item.date.value.toUpperCase()
+
+    // Replace all dots with empty string
+    item.date.value = item.date.value.replace(/\./g, '')
+
+    // Replace all ( and ) with empty string
+    item.date.value = item.date.value.replace(/[()]/g, '')
     console.log(item.date.value)
   })
   return fetchedData
 }
-
 
 // let fetchedData = runQuery(url, query)
 // console.log(fetchedData)

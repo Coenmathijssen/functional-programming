@@ -90,7 +90,7 @@ function cleanDataYear (fetchedData) {
     }
   })
 
-  newData.forEach(item => console.log('items: ', item.date.bc))
+  // newData.forEach(item => console.log('items: ', item.date.bc))
 }
 
 function cleanCharacter (item) {

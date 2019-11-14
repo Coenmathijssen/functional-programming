@@ -58,7 +58,7 @@ De website live zetten kan via GitHub Pages.
 De data is afkomstig van de Stichting Nationaal Museum van Wereldculturen. Zij hebben een enorme collectie met wel 500.000 objecten. Dit is een verzameling van allerlei soorten objecten van over de hele wereld. De objecten kunnen zo uit zijn als honderden jaren voor Christus, tot objecten van deze eeuw. De objecten zijn enorm divers en zijn bijvoorbeeld wapens, kledij, instrumenten, religieuze objecten, etc. De meeste objecten komen uit Indonesië door het koloniale verleden.
 
 ## De ruwe data
-De data van het NMVW krijg ik binnen via een fetch van de API met een endpoint. De database van deze API is gebouwd met SPARQL. Er is dus een SPARQL query nodig om deze data te fetchen. Lees hoe ik dat doe op de [SOARQL pagina](#). De data die je hieruit terugkrijgt is behoorlijk ruw. De API geeft de data in deze vorm terug:
+De data van het NMVW krijg ik binnen via een fetch van de API met een endpoint. De database van deze API is gebouwd met SPARQL. Er is dus een SPARQL query nodig om deze data te fetchen. Lees hoe ik dat doe op de [SOARQL pagina](https://github.com/Coenmathijssen/functional-programming/wiki/SPARQL). De data die je hieruit terugkrijgt is behoorlijk ruw. De API geeft de data in deze vorm terug:
 <img width="1083" alt="Screenshot 2019-11-14 at 18 29 05" src="https://user-images.githubusercontent.com/43337909/68881040-ad7eed00-070c-11ea-8632-3a05db9557ca.png">
 <br></br>
 

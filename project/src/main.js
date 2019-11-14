@@ -1,52 +1,69 @@
-const query = `PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX gn: <http://www.geonames.org/ontology#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+const query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX hdlh: <https://hdl.handle.net/20.500.11840/termmaster>
+PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX gn: <http://www.geonames.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-# let op: geeft aantal van unieke combinaties van ?date en ?landLabel
-SELECT ?landLabel ?date (COUNT(?cho) AS ?choCount) WHERE {
-   ?cho dct:created ?date;
-        dct:spatial ?plaats .
- # We willen geen datums die de string [NI] bevatten
-   FILTER (!REGEX(?date, "[NI]")) . #zorgt ervoor dat de string "NI" niet wordt meegenomen
- # geef het label van het land waar de plaats ligt
-   ?plaats skos:exactMatch/gn:parentCountry ?land .
-   ?land gn:name ?landLabel .
-} GROUP BY ?date ?landLabel
-ORDER BY DESC(?choCount)`
+SELECT * WHERE {
+     # alle plaatsen in Afrika
+     <https://hdl.handle.net/20.500.11840/termmaster3> skos:narrower* ?place .
+     ?place skos:prefLabel ?placeName .
+
+     # alle subcategorieen van sieraden
+     <https://hdl.handle.net/20.500.11840/termmaster13201> skos:narrower* ?type .
+     ?type skos:prefLabel ?typeName .
+
+     # geef alle sieraden in Oceanie, met plaatje en lat/long van de plaats
+     ?cho dct:spatial ?place ;
+         edm:object ?type ;
+         edm:isShownBy ?imageLink .
+
+     ?place skos:exactMatch/wgs84:lat ?lat .
+     ?place skos:exactMatch/wgs84:long ?long .
+     ?cho dc:title ?title .
+     ?cho dc:description ?desc .
+     ?cho dct:created ?date .
+}
+GROUP BY ?type`
 // URL for the API
 const url = 'https://api.data.netwerkdigitaalerfgoed.nl/datasets/ivo/NMVW/services/NMVW-04/sparql'
 
-// The base of this code is Laurens. I changed it to suit my use case
-runQuery(url, query)
-let self = this
+// Robbert helped me with this code. I use a callback function to get the data outside of the runQuery scope
+let finalArray = runQuery(url, query, data => {
+  let finalArray = data
+  console.log('gaatgoe: ', finalArray)
+  return finalArray
+})
 
-function runQuery (url, query) {
+console.log('pls: ', finalArray)
+
+// The base of this code is Laurens. I changed it to suit my use case
+function runQuery (url, query, cb) {
   // Call the url with the query attached, output data
   fetch(url + '?query=' + encodeURIComponent(query) + '&format=json')
     .then(res => res.json())
     .then(json => {
       let fetchedData = json.results.bindings
-      console.log('fetched data: ', fetchedData)
 
       // Replace "http" in the img url to "https". Wiebe helped me with this code.
       // fetchedData.forEach(item => {
       //   item.imageLink.value = item.imageLink.value.replace('http', 'https')
       // })
 
-      self.apiData = fetchedData
       console.log('fetchedData: ', fetchedData)
       return fetchedData
     })
     .then(fetchedData => {
-      cleanDataYear(fetchedData)
+      console.log('fetched data: ', fetchedData)
+      cb(cleanDataYear(fetchedData))
     })
 }
 
@@ -86,10 +103,11 @@ function cleanDataYear (fetchedData) {
   })
 
   // delete all items which don't fit the format by now
-  let finalArray = deleteUnformattedData(newData)
-  console.log('finalArray: ', finalArray)
+  const finalArray = deleteUnformattedData(newData)
+
 
   // finalArray.forEach(item => console.log('items: ', item.date.value))
+  d3testing(finalArray)
 
   return finalArray
 }
@@ -228,4 +246,65 @@ function convertToNumber (item) {
   let itemDateValue = item.date.value
   item.date.value = parseInt(itemDateValue)
   return item
+}
+
+
+
+
+
+
+
+
+/////////////// D3 /////////////////////////////////////////////////////////////
+function d3testing(finalArray) {
+  let dataset = [80, 100, 56, 120, 180, 30, 40, 120, 160]
+  let svgWidth = 500, svgHeight = 300, barPadding = 5
+  let barWidth = (svgWidth / dataset.length)
+
+  let svg = d3.select('svg')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+
+  let barChart = svg.selectAll('rect')
+    .data(dataset)
+    .enter()
+    .append('rect')
+    .attr('y', function (d) {
+      return svgHeight - d
+    })
+    .attr('height', function (d) {
+      return d
+    })
+    .attr('width', barWidth - barPadding)
+    .attr('transform', function (d, i) {
+        var translate = [barWidth * i, 0]
+        return `translate(${translate})`
+    })
+// // Selecteert de eerste die d3 vindt
+// d3.select()
+
+// // Selecteert ze allemaal
+// d3.selectAll()
+
+// // Met style kan je kleur aanpassen
+// d3.select('h1').style('color', 'red')
+// // Class toevoegen
+// .attr('class', 'heading')
+// // Textcontent veranderen
+// .text('updated h1 tag')
+
+// // Appenden van een elementen
+// d3.select('body')
+// .append('p')
+// .text('hoi')
+
+// d3.select('body')
+//   .selectAll('p')
+//   // De data koppelen aan D3
+//   .data(finalArray)
+//   .enter()
+//   .append('p')
+
+//   // Een functie om de data weer te geven
+//   .text(function(d) { return d.date})
 }

@@ -36,12 +36,15 @@ Bij het rad van fortuin zijn twee schijven aanwezig. Één voor jaartallen (tuss
 3. Clone de repo met 
 <br></br>
 `https://github.com/Coenmathijssen/functional-programming.git`
+<br></br>
 4. Navigeer via je terminal naar de repo met `cd`. Installeer vervolgens de benodigde dependencies met
 <br></br>
 `npm install`
+<br></br>
 5. Voor het builden, bundlen en compilen (om te publiceren) van de javascript gebruik
 <br></br>
 `npm run build`
+<br></br>
 6. Open de index.html in je browser om de website te bekijken
 
 # Deployment

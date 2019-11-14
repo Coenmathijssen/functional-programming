@@ -39,11 +39,9 @@ const url = 'https://api.data.netwerkdigitaalerfgoed.nl/datasets/ivo/NMVW/servic
 // Robbert helped me with this code. I use a callback function to get the data outside of the runQuery scope
 let finalArray = runQuery(url, query, data => {
   let finalArray = data
-  console.log('gaatgoe: ', finalArray)
+  console.log('cleanedData: ', finalArray)
   return finalArray
 })
-
-console.log('pls: ', finalArray)
 
 // The base of this code is Laurens. I changed it to suit my use case
 function runQuery (url, query, cb) {
@@ -53,16 +51,15 @@ function runQuery (url, query, cb) {
     .then(json => {
       let fetchedData = json.results.bindings
 
-      // Replace "http" in the img url to "https". Wiebe helped me with this code.
-      // fetchedData.forEach(item => {
-      //   item.imageLink.value = item.imageLink.value.replace('http', 'https')
-      // })
+      //Replace "http" in the img url to "https". Wiebe helped me with this code.
+      fetchedData.forEach(item => {
+        item.imageLink.value = item.imageLink.value.replace('http', 'https')
+      })
 
       console.log('fetchedData: ', fetchedData)
       return fetchedData
     })
     .then(fetchedData => {
-      console.log('fetched data: ', fetchedData)
       cb(cleanDataYear(fetchedData))
     })
 }
@@ -90,31 +87,37 @@ function cleanDataYear (fetchedData) {
     item = convertToNumber(item)
 
     return {
-      id: item.choCount,
-      date: {
+      id: item.cho.value,
+      image: item.imageLink.value,
+      year: item.date.value,
+      dateInfo: {
         type: item.date.type,
-        value: item.date.value,
         bc: item.date.bc,
         ad: item.date.ad,
         century: item.date.century
       },
-      landLabel: item.landLabel
+      country: item.placeName.value,
+      geoLocation: {
+        long: item.long.value,
+        lat: item.lat.value
+      }
     }
   })
 
   // delete all items which don't fit the format by now
   const finalArray = deleteUnformattedData(newData)
 
-
   // finalArray.forEach(item => console.log('items: ', item.date.value))
-  d3testing(finalArray)
+
+  // Run the D3 function and pass the cleaned data through
+  runD3(finalArray)
 
   return finalArray
 }
 
 function deleteUnformattedData (array) {
   const finalArray = array.filter(item => {
-    if (item.date.value.toString().length === 4) {
+    if (item.year.toString().length === 4) {
       return item
     }
   })
@@ -248,63 +251,10 @@ function convertToNumber (item) {
   return item
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////// D3 /////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-/////////////// D3 /////////////////////////////////////////////////////////////
-function d3testing(finalArray) {
-  let dataset = [80, 100, 56, 120, 180, 30, 40, 120, 160]
-  let svgWidth = 500, svgHeight = 300, barPadding = 5
-  let barWidth = (svgWidth / dataset.length)
-
-  let svg = d3.select('svg')
-    .attr('width', svgWidth)
-    .attr('height', svgHeight)
-
-  let barChart = svg.selectAll('rect')
-    .data(dataset)
-    .enter()
-    .append('rect')
-    .attr('y', function (d) {
-      return svgHeight - d
-    })
-    .attr('height', function (d) {
-      return d
-    })
-    .attr('width', barWidth - barPadding)
-    .attr('transform', function (d, i) {
-        var translate = [barWidth * i, 0]
-        return `translate(${translate})`
-    })
-// // Selecteert de eerste die d3 vindt
-// d3.select()
-
-// // Selecteert ze allemaal
-// d3.selectAll()
-
-// // Met style kan je kleur aanpassen
-// d3.select('h1').style('color', 'red')
-// // Class toevoegen
-// .attr('class', 'heading')
-// // Textcontent veranderen
-// .text('updated h1 tag')
-
-// // Appenden van een elementen
-// d3.select('body')
-// .append('p')
-// .text('hoi')
-
-// d3.select('body')
-//   .selectAll('p')
-//   // De data koppelen aan D3
-//   .data(finalArray)
-//   .enter()
-//   .append('p')
-
-//   // Een functie om de data weer te geven
-//   .text(function(d) { return d.date})
+function runD3 (finalArray) {
+  console.log(finalArray)
 }

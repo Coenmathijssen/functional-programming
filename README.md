@@ -3,7 +3,7 @@
 
 # Het concept
 ![idee generatie-2](https://user-images.githubusercontent.com/43337909/68127703-b276bc00-ff16-11e9-8d27-709fa0efcf81.jpg)
-Bij het rad van fortuin zijn twee schijven aanwezig. Één voor jaartallen (tussen jaartal X en Y) en één voor een bepaalde categorie. Met een spin gaan beide schijven draaien en stoppen ze op een willekeurige waarde. Vervolgens worden hier de bijpassende objecten voor opgehaald en geplaatst op de wereldkaart via GEO coördinaten. Er wordt berekend 
+Bij het rad van fortuin zijn twee schijven aanwezig. Één voor jaartallen (tussen jaartal X en Y) en één voor een bepaalde categorie. Met een spin gaan beide schijven draaien en stoppen ze op een willekeurige waarde. Vervolgens worden hier de bijpassende objecten voor opgehaald en geplaatst op de wereldkaart via GEO coördinaten. Om te voorkomen dat er alleen maar objecten op dezelfde plek wordt weergegeven, worden er maar 3 tot 5 items weeergegeven per continent. Ook is er een toggle aanwezig. Deze toggled om of alle objecten te laten zien, of alle objecten die al ooit tentoon zijn gesteld.
 
 Dit eigenlijk door twee redenen:
 - Dit concept past het beste bij de eisen van Rick. Ondanks dat dit niet nodig is, vind ik het wel leuk om aan de eisen van alle stakeholders te voldoen. Met dit concept is er én een presentatie van alle objecten binnen de collectie én is het interactief.

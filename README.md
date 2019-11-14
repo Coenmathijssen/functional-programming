@@ -20,7 +20,7 @@ Bij het rad van fortuin zijn twee schijven aanwezig. Één voor jaartallen (tuss
 # Features
 - [API data opschonen](https://github.com/Coenmathijssen/functional-programming/wiki/API-data-opschonen)
 - [D3 visualisatie](https://github.com/Coenmathijssen/functional-programming/wiki/D3)
--[SPARQL](#)
+-[SPARQL](https://github.com/Coenmathijssen/functional-programming/wiki/SPARQL)
 
 
 # Gebruikte tools

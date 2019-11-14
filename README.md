@@ -34,13 +34,13 @@ Bij het rad van fortuin zijn twee schijven aanwezig. Één voor jaartallen (tuss
 1. Open je terminal op je computer
 2. Maak een map aan waar je het project in wil hebben met `mkdir`
 3. Clone de repo met 
-<br>
+<br></br>
 `https://github.com/Coenmathijssen/functional-programming.git`
 4. Navigeer via je terminal naar de repo met `cd`. Installeer vervolgens de benodigde dependencies met
-<br>
+<br></br>
 `npm install`
 5. Voor het builden, bundlen en compilen (om te publiceren) van de javascript gebruik
-<br>
+<br></br>
 `npm run build`
 6. Open de index.html in je browser om de website te bekijken
 
@@ -57,7 +57,7 @@ De data is afkomstig van de Stichting Nationaal Museum van Wereldculturen. Zij h
 ## De ruwe data
 De data van het NMVW krijg ik binnen via een fetch van de API met een endpoint. De database van deze API is gebouwd met SPARQL. Er is dus een SPARQL query nodig om deze data te fetchen. Lees hoe ik dat doe op de [SOARQL pagina](#). De data die je hieruit terugkrijgt is behoorlijk ruw. De API geeft de data in deze vorm terug:
 <img width="1083" alt="Screenshot 2019-11-14 at 18 29 05" src="https://user-images.githubusercontent.com/43337909/68881040-ad7eed00-070c-11ea-8632-3a05db9557ca.png">
-<br>
+<br></br>
 
 ## Wat heb ik nodig?
 Ik heb objecten tussen een bepaald tijdvak binnen een bepaalde categorie nodig. Dus bijvoorbeeld: wapens van 1400 tot 1500. Dit variëert per categorie en jaartal. Maar in ieder geval heb ik van de objecten het volgende dingen nodig:

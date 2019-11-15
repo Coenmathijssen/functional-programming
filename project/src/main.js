@@ -34,19 +34,19 @@ SELECT * WHERE {
 
 }
 GROUP BY ?type
-LIMIT 30`
+LIMIT 500`
 // URL for the API
 const url = 'https://api.data.netwerkdigitaalerfgoed.nl/datasets/ivo/NMVW/services/NMVW-04/sparql'
 
-// Robbert helped me with this code. I use a callback function to get the data outside of the runQuery scope
-let finalArray = runQuery(url, query, data => {
-  let finalArray = data
-  console.log('cleanedData: ', finalArray)
-  return finalArray
-})
+// // Robbert helped me with this code. I use a callback function to get the data outside of the runQuery scope
+// console.log('cleanedData: ', runQuery(url, query, data => {
+//   return data
+// }))
+
+runQuery(url, query)
 
 // The base of this code is Laurens. I changed it to suit my use case
-function runQuery (url, query, cb) {
+function runQuery (url, query) {
   // Call the url with the query attached, output data
   fetch(url + '?query=' + encodeURIComponent(query) + '&format=json')
     .then(res => res.json())
@@ -63,8 +63,7 @@ function runQuery (url, query, cb) {
     })
     .then(fetchedData => {
       let newData = cleanDataYear(fetchedData)
-      console.log('testingg: ', newData)
-
+      console.log('cleaned data: ', newData)
     })
 }
 
@@ -200,8 +199,9 @@ function convertToYear (item) {
     let splittedArray = itemDateValue.split('-')
     if (splittedArray[0] &&
      splittedArray[1] &&
-      splittedArray[0].match(/^[0-9]+$/) != null &&
-      splittedArray[1].match(/^[0-9]+$/) != null) {
+     // https://stackoverflow.com/questions/14783196/how-to-check-in-javascript-that-a-string-contains-alphabetical-characters
+      splittedArray[0].match(/[a-z]/) === null &&
+      splittedArray[1].match(/[a-z]/) === null) {
       if (splittedArray[1].length === 4) {
         item.date.value = splittedArray[0]
       }
@@ -212,7 +212,12 @@ function convertToYear (item) {
   if (itemDateValue.length === 8) {
     let splittedArray = itemDateValue.split('-')
     // Check if the array has 3 items, only contain numbers and if the last item in the array is a year
-    if (splittedArray[0] && splittedArray[1] && splittedArray[2] && splittedArray[0].match(/^[0-9]+$/) != null && splittedArray[1].match(/^[0-9]+$/) != null && splittedArray[2].match(/^[0-9]+$/) != null) {
+    if (splittedArray[0] &&
+      splittedArray[1] &&
+      splittedArray[2] &&
+      splittedArray[0].match(/[a-z]/) === null &&
+      splittedArray[1].match(/[a-z]/) === null &&
+      splittedArray[2].match(/[a-z]/) === null) {
       if (splittedArray[2].length === 4) {
         item.date.value = splittedArray[2]
       }
@@ -223,14 +228,22 @@ function convertToYear (item) {
     let splittedArray = itemDateValue.split('-')
     // Here I check if the date has this format: '1900-2000'. I split the two, count them up and divide them by 2.
     // So I only keep one average number
-    if (splittedArray[0] && splittedArray[1] && splittedArray[0].match(/^[0-9]+$/) != null && splittedArray[1].match(/^[0-9]+$/) != null) {
+    if (splittedArray[0] &&
+      splittedArray[1] &&
+      splittedArray[0].match(/[a-z]/) === null &&
+      splittedArray[1].match(/[a-z]/) === null) {
       if (splittedArray[0].length === 4 && splittedArray[1].length === 4) {
         item.date.value = splitStringCalcAverage(itemDateValue)
       }
     }
 
     // Here I check if the date has this format: '02-4-2000' or this format '2-04-2000'. I only keep the year (last four numbers)
-    if (splittedArray[0] && splittedArray[1] && splittedArray[2] && splittedArray[0].match(/^[0-9]+$/) != null && splittedArray[1].match(/^[0-9]+$/) != null && splittedArray[2].match(/^[0-9]+$/) != null) {
+    if (splittedArray[0] &&
+      splittedArray[1] &&
+      splittedArray[2] &&
+      splittedArray[0].match(/[a-z]/) === null &&
+      splittedArray[1].match(/[a-z]/) === null &&
+      splittedArray[2].match(/[a-z]/) === null) {
       if (splittedArray[2].length === 4) {
         item.date.value = splittedArray[2]
       }
@@ -240,11 +253,13 @@ function convertToYear (item) {
   // Here I check if the date has this format: '02-05-2000'. I only keep the year (last four numbers)
   if (itemDateValue.length === 10) {
     let splittedArray = itemDateValue.split('-')
-    if (splittedArray[2] && splittedArray[2].length === 4) {
+    if (splittedArray[2] &&
+      splittedArray[2].length === 4) {
       // console.log(item.date.value, splittedArray[2])
       item.date.value = splittedArray[2]
     } // Check if first array item is a year and only contains numbers
-    if (splittedArray[0].length === 4 && splittedArray[0].match(/^[0-9]+$/) != null) {
+    if (splittedArray[0].length === 4 &&
+      splittedArray[0].match(/^[0-9]+$/) != null) {
       item.date.value = splittedArray[0]
     }
   }
